@@ -1,5 +1,13 @@
 import { ResultForm } from "@/app/simulator/page";
 import { LinkButton } from "./LinkButton";
+import {
+  energies,
+  mileagePerYear,
+  passagers,
+  vehicleTypes,
+  years,
+} from "@/assets/data/loanInputsData";
+import { PreviewRow } from "./PreviewRow";
 
 type Props = {
   result: ResultForm;
@@ -14,24 +22,20 @@ export function PreviewResult({ result, reset }: Props) {
           Résumé du véhicule
         </legend>
       </div>
-      <p>
-        <span className="font-semibold">Type de véhicule</span> :{" "}
-        {result.data.type}
-      </p>
-      <p>
-        <span className="font-semibold">Energie</span> : {result.data.energy}
-      </p>
-      <p>
-        <span className="font-semibold">Kilometrage par an</span> :{" "}
-        {result.data.mileagePerYear}
-      </p>
-      <p>
-        <span className="font-semibold">Année</span> : {result.data.years}
-      </p>
-      <p>
-        <span className="font-semibold">Passagers</span> :{" "}
-        {result.data.passagers}
-      </p>
+      <PreviewRow
+        label="Type de véhicule"
+        data={vehicleTypes}
+        value={result.data.type}
+      />
+      <PreviewRow label="Energie" data={energies} value={result.data.energy} />
+      <PreviewRow
+        label="Kilometrage par an"
+        data={mileagePerYear}
+        value={result.data.mileagePerYear}
+      />
+      <PreviewRow label="Année" data={years} value={result.data.years} />
+      <PreviewRow label="Passagers" value={result.data.passagers} />
+
       <p className="text-white text-lg bg-app-midnight p-4 rounded w-fit">
         <span className="font-semibold underline underline-offset-4">
           Taux de l&apos;emprunt
