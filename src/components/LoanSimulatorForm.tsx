@@ -40,19 +40,17 @@ type Props = {
   onSubmit: ({ data, rate }: ResultForm) => void;
 };
 
-const defaultError: Record<InputName, string[]> = {
-  type: [],
-  energy: [],
-  mileagePerYear: [],
-  years: [],
-  passagers: [],
-};
-
 export function LoanSimulatorForm({ onSubmit }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [errors, setErrors] = useState(defaultError);
+  const [errors, setErrors] = useState<Record<InputName, string[]>>({
+    type: [],
+    energy: [],
+    mileagePerYear: [],
+    years: [],
+    passagers: [],
+  });
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -69,11 +67,20 @@ export function LoanSimulatorForm({ onSubmit }: Props) {
       onSubmit({ data, rate });
     } catch (err) {
       if (err instanceof z.ZodError) {
-        const formatedErrors = err.errors.reduce((acc, err) => {
-          const path = err.path as InputName[];
-          path.forEach((inputName) => acc[inputName].push(err.message));
-          return acc;
-        }, defaultError);
+        const formatedErrors = err.errors.reduce<Record<InputName, string[]>>(
+          (acc, err) => {
+            const path = err.path as InputName[];
+            path.forEach((inputName) => acc[inputName].push(err.message));
+            return acc;
+          },
+          {
+            type: [],
+            energy: [],
+            mileagePerYear: [],
+            years: [],
+            passagers: [],
+          }
+        );
         setErrors(formatedErrors);
       }
     }
@@ -132,7 +139,10 @@ export function LoanSimulatorForm({ onSubmit }: Props) {
       </div>
 
       <div className="mt-8">
-        <button className="uppercase text-sm font-bold tracking-wide bg-indigo-500 text-gray-100 p-3 rounded-lg w-full focus:outline-none focus:shadow-outline">
+        <button
+          className="uppercase text-sm font-bold tracking-wide bg-indigo-500 text-gray-100 p-3 rounded-lg w-full focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
           Calculer mon taux d&apos;emprunt
         </button>
       </div>
